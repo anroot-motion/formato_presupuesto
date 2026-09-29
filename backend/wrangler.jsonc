@@ -1,0 +1,27 @@
+// Todo en Cloudflare: Worker (app + API) + D1 (usuarios e índice) + R2 (documentos).
+// Pasos completos en DEPLOY-TI.md, sección 4. Resumen, desde esta carpeta:
+//   npx wrangler d1 create propuesta-motion          → pegar el database_id abajo
+//   npx wrangler r2 bucket create propuesta-motion-docs
+//   npx wrangler d1 execute propuesta-motion --remote --file=sql/esquema-d1.sql
+//   npx wrangler secret put SECRETO_SESION
+//   npx wrangler deploy
+{
+  "name": "propuesta-motion",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "../app",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "propuesta-motion", "database_id": "PEGAR-AQUI-EL-ID-DE-D1" }
+  ],
+  "r2_buckets": [
+    { "binding": "DOCS", "bucket_name": "propuesta-motion-docs" }
+  ],
+  "vars": {
+    "DB_DRIVER": "d1",
+    "PBKDF2_ITER": "100000"
+  }
+}
